@@ -1,0 +1,14 @@
+{
+    "include": [
+        "src/*.ts",
+        "src/**/*.ts"
+    ],
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es5",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "lib": ["es5", "es2015", "dom", "scripthost"]
+    }
+}
+

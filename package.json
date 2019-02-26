@@ -1,0 +1,23 @@
+{
+  "name": "reqnrouter302",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/config": "0.0.34",
+    "@types/node": "^11.9.5",
+    "config": "^3.0.1",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^5.0.0",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "typescript-ioc": "^1.2.4",
+    "winston": "^3.2.1"
+  }
+}
