@@ -12,6 +12,13 @@ export class HttpEnpointModule {
     domain: string;
     server: http.Server;
 
+    serviceEngines: [{
+        name: string;
+        domain: string;
+        ip: string;
+        port: number
+    }];
+
     @Inject logger: LoggerService;
 
     private listen() {
@@ -21,13 +28,14 @@ export class HttpEnpointModule {
                 this.domain &&
                 req.headers['host'].startsWith(this.domain)
             ) {
-                //TODO redirect randomly
+                const randomSE = this.serviceEngines[Math.floor((Math.random()*this.serviceEngines.length))];
+                this.logger.info(randomSE);
             } else {
                 this.logger.error(
                     'Request received for unknown domain. Rejecting'
                 );
                 this.logger.error(req.headers);
-                res.end('HTTP/1.0 400 Bad Request\r\n\r\n');
+                res.end('HTTP/1.1 400 Bad Request\r\n\r\n');
             }
         });
 
@@ -40,6 +48,8 @@ export class HttpEnpointModule {
         this.host = config.get('http.host');
         this.port = config.get('http.port');
         this.domain = config.get('http.domain');
+
+        this.serviceEngines = config.get('serviceEngines');
 
         this.listen();
     }
