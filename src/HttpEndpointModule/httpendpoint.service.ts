@@ -31,6 +31,10 @@ export class HttpEnpointModule {
                 this.logger.info('Chosing a random Service Engine');
                 const randomSE = this.serviceEngines[Math.floor((Math.random()*this.serviceEngines.length))];
                 this.logger.info(randomSE);
+                res.writeHead(302, {
+                    'Location': `http://${randomSE.domain}:${randomSE.port}/${req.url}`
+                });
+                res.end();
             } else {
                 this.logger.error(
                     'Request received for unknown domain. Rejecting'
