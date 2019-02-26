@@ -28,6 +28,7 @@ export class HttpEnpointModule {
                 this.domain &&
                 req.headers['host'].startsWith(this.domain)
             ) {
+                this.logger.info('Chosing a random Service Engine');
                 const randomSE = this.serviceEngines[Math.floor((Math.random()*this.serviceEngines.length))];
                 this.logger.info(randomSE);
             } else {
@@ -50,6 +51,7 @@ export class HttpEnpointModule {
         this.domain = config.get('http.domain');
 
         this.serviceEngines = config.get('serviceEngines');
+        this.logger.info(this.serviceEngines);
 
         this.listen();
     }
