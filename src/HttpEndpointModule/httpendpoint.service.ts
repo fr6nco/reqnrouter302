@@ -35,8 +35,12 @@ export class HttpEnpointModule {
                 this.logger.debug(`Chosing a Service Engine from controller to ip ${req.socket.remoteAddress}`);
                 this.ccService.getClosestSeToIP(req.socket.remoteAddress).then((ip: string) => {
                     this.logger.debug(`SE IP is ${ip}`);
+                    this.serviceEngines.forEach((se) => {
+                        this.logger.debug('SE:');
+                        this.logger.debug(se);
+                    });
                     const randomSE = this.serviceEngines.find((se) => {
-                        return se.ip == ip;
+                        return se.ip === ip;
                     });
                     this.logger.debug(`SE is ${randomSE}`);
                     res.writeHead(302, {
@@ -73,6 +77,8 @@ export class HttpEnpointModule {
         });
 
         this.ccService.fetchSes().then((ses) => {
+            this.logger.debug('Fetched Ses');
+            this.logger.debug(ses);
             this.serviceEngines = ses;
         })
     }
