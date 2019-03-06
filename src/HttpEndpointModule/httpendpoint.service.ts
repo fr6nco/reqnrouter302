@@ -43,8 +43,10 @@ export class HttpEnpointModule {
                         return se.ip === ip;
                     });
                     this.logger.debug(`SE is ${randomSE}`);
+                    // PORT TO 8080, as this port is the NON CDN Engine port
+                    // TODO make it configurable
                     res.writeHead(302, {
-                        'Location': `http://${randomSE.domain}:${randomSE.port}/${req.url}`
+                        'Location': `http://${randomSE.domain}:8080/${req.url}`
                     });
                     res.end();
                 })
