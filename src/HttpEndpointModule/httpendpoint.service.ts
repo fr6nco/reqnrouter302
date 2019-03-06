@@ -3,6 +3,8 @@ import * as http from 'http';
 
 import { AutoWired, Singleton, Inject } from 'typescript-ioc';
 import { LoggerService } from '../LoggerModule/logger.service';
+import { ControllerConnectorService } from '../ControllerEndpintConnectorModule/connector.services';
+import { ControllerConnectorStore } from '../ControllerEndpintConnectorModule/store/models';
 
 @AutoWired
 @Singleton
@@ -21,6 +23,8 @@ export class HttpEnpointModule {
 
     @Inject logger: LoggerService;
 
+    @Inject ccService: ControllerConnectorService;
+
     private listen() {
         this.server = http.createServer(async (req, res) => {
             if (
@@ -29,12 +33,21 @@ export class HttpEnpointModule {
                 req.headers['host'].startsWith(this.domain)
             ) {
                 this.logger.info('Chosing a random Service Engine');
-                const randomSE = this.serviceEngines[Math.floor((Math.random()*this.serviceEngines.length))];
-                this.logger.info(randomSE);
-                res.writeHead(302, {
-                    'Location': `http://${randomSE.domain}:${randomSE.port}/${req.url}`
-                });
-                res.end();
+                this.ccService.getClosestSeToIP(req.socket.remoteAddress).then((ip: string) => {
+                    const randomSE = this.serviceEngines.find((se) => {
+                        return se.ip == ip;
+                    });
+                    
+                    res.writeHead(302, {
+                        'Location': `http://${randomSE.domain}:${randomSE.port}/${req.url}`
+                    });
+                    res.end();
+                })
+                .catch((err) => {
+                    console.error(err);
+                    res.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+                })
+
             } else {
                 this.logger.error(
                     'Request received for unknown domain. Rejecting'
@@ -49,14 +62,34 @@ export class HttpEnpointModule {
         });
     }
 
+    private connected() {
+
+        this.ccService.fetchRRs().then((rrs) => {
+            rrs.forEach((rr) => {
+                this.domain = rr.domain;
+            });
+            this.listen();
+        });
+
+        this.ccService.fetchSes().then((ses) => {
+            this.serviceEngines = ses;
+        })
+    }
+
+    private disconnected() {
+        this.logger.error('Disconnect not implemented yet');
+    }
+
     constructor() {
         this.host = config.get('http.host');
         this.port = config.get('http.port');
-        this.domain = config.get('http.domain');
 
-        this.serviceEngines = config.get('serviceEngines');
-        this.logger.info(this.serviceEngines);
-
-        this.listen();
+        this.ccService.ccEvents.subscribe((ccEvents: ControllerConnectorStore) => {
+            if (ccEvents.connected) {
+                this.connected();
+            } else {
+                this.disconnected();
+            }
+        });
     }
 }

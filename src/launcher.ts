@@ -2,6 +2,7 @@ import { Inject, AutoWired, Singleton, Container } from 'typescript-ioc';
 import { LoggerService } from './LoggerModule/logger.service';
 
 import { HttpEnpointModule } from './HttpEndpointModule/httpendpoint.service';
+import { ControllerConnectorService } from './ControllerEndpintConnectorModule/connector.services';
 
 @AutoWired
 @Singleton
@@ -11,7 +12,8 @@ export class RequestRouter302Launcher {
     logger: LoggerService;
 
     private services = [
-        Container.get(HttpEnpointModule)
+        Container.get(HttpEnpointModule),
+        Container.get(ControllerConnectorService)
     ];
 
     public async run(): Promise<void> {

@@ -17,6 +17,8 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
+    "rpc-websockets": "^4.3.5",
+    "rxjs": "^6.4.0",
     "typescript-ioc": "^1.2.4",
     "winston": "^3.2.1"
   }
