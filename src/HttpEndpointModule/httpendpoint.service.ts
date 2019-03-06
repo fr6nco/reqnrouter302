@@ -32,19 +32,20 @@ export class HttpEnpointModule {
                 this.domain &&
                 req.headers['host'].startsWith(this.domain)
             ) {
-                this.logger.info('Chosing a random Service Engine');
+                this.logger.debug(`Chosing a Service Engine from controller to ip ${req.socket.remoteAddress}`);
                 this.ccService.getClosestSeToIP(req.socket.remoteAddress).then((ip: string) => {
+                    this.logger.debug(`SE IP is ${ip}`);
                     const randomSE = this.serviceEngines.find((se) => {
                         return se.ip == ip;
                     });
-                    
+                    this.logger.debug(`SE is ${randomSE}`);
                     res.writeHead(302, {
                         'Location': `http://${randomSE.domain}:${randomSE.port}/${req.url}`
                     });
                     res.end();
                 })
                 .catch((err) => {
-                    console.error(err);
+                    this.logger.error(`Failed to get SE: ${err}`);
                     res.end('HTTP/1.1 400 Bad Request\r\n\r\n');
                 })
 
