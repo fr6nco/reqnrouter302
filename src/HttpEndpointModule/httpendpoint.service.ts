@@ -37,7 +37,7 @@ export class HttpEnpointModule {
                     this.logger.debug(`SE IP is ${ip}`);
                     this.serviceEngines.forEach((se) => {
                         this.logger.debug('SE:');
-                        this.logger.debug(se);
+                        this.logger.debug(JSON.stringify(se));
                     });
                     const randomSE = this.serviceEngines.find((se) => {
                         return se.ip === ip;
