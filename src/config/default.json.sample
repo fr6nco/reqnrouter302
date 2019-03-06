@@ -1,23 +1,13 @@
 {
     "http": {
         "host": "10.11.0.99",
-        "port": 8088,
-        "domain": "cdn.example.com"
+        "port": 8088
     },
-    "serviceEngines": [
-        {
-            "name": "se1",
-            "domain": "se1.cdn.exmaple.com",
-            "ip": "10.11.0.11",
-            "port": 8080
-        },
-        {
-            "name": "se2",
-            "domain": "se2.cdn.exmaple.com",
-            "ip": "10.11.0.12",
-            "port": 8080
-        }
-    ],
+    "connector": {
+        "ip": "192.168.56.1",
+        "port": 8080,
+        "url": "cdnhandler/ws"
+    },
     "logging": {
         "level": "debug"
     }
